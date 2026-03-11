@@ -1,54 +1,8 @@
-# requirements.txt
-AUTHENTICATION_KEY: 12345
-
-# README.md
-# Setup instructions
-# - install FastAPI and Flask-RESTful
-# - install Pydantic and SQLAlchemy
-# - install any required libraries or dependencies
-
-# models.py
-from pydantic import BaseModel
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-Base = BaseModel
-
-class Task(Base):
-    __tablename__ = 'tasks'
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    description = Column(String)
-    completed = Column(Boolean)
-
-    def __str__(self):
-        return f"{self.title} - {self.description}"
-
-# database.py
-from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import AsyncSession
-
-engine = create_engine('sqlite:///:memory:')
-Session = sessionmaker(bind=engine)
-session = Session()
-
-# services.py
-from fastapi import FastAPI
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
-app = FastAPI()
-
-@app.post('/tasks')
-async def create_task(task: Task):
-    task_id = session.add_row(task)
-    session.commit()
-    return {'task_id': task_id}
-
-@app.get('/tasks/<int:task_id>')
-async def get_task(task_id: int):
-    task = session.query(Task).filter_by(id=task_id).first()
-    if task:
-        return {'id': task.id, 'title': task.title, 'description': task.description, 'completed': task.completed}
-    else:
-        return {'error': 'Task not found'}
+fastapi
+uvicorn
+sqlalchemy
+asyncpg
+pydantic
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
